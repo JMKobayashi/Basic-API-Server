@@ -13,8 +13,23 @@ import (
 	"github.com/go-chi/jwtauth"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+
+	_ "github.com/JMKobayashi/Basic-API-Server/docs"
+	httpSwagger "github.com/swaggo/http-swagger"
 )
 
+// @title Basic API Example
+// @version 1.0
+// @description Product API with authentication
+
+// @contact.name James Kobayashi
+// @contact.email james.m.kobayashi@gmail.com
+
+// @host localhost:8000
+// @BasePath /
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
 func main() {
 	configs, err := configs.LoadConfig(".")
 	if err != nil {
@@ -50,6 +65,8 @@ func main() {
 
 	r.Post("/user", userHandler.CreateUser)
 	r.Post("/user/token", userHandler.GetJWT)
+
+	r.Get("/docs/*", httpSwagger.Handler(httpSwagger.URL("http://localhost:8000/docs/doc.json")))
 	http.ListenAndServe(":8000", r)
 }
 
